@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head><meta charset="utf-8" />
-<title>OrientationPrediction</title><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
+<title>orientation-prediction</title><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
 
 <style type="text/css">
@@ -11784,7 +11784,7 @@ div#notebook {
 <div class="prompt input_prompt">In&nbsp;[1]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">pathlib</span>  <span class="c1"># Python 3.4</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">pathlib</span>  <span class="c1"># since Python 3.4</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">networkx</span> <span class="k">as</span> <span class="nn">nx</span>
@@ -11804,14 +11804,14 @@ div#notebook {
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>We have a floor plan of some building with desks indicated by Xs:</p>
+<p>We have the floor plan of some building represented on a 2d grid where Xs indicate desks:</p>
 
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[17]:</div>
+<div class="prompt input_prompt">In&nbsp;[20]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">floor</span> <span class="o">=</span> <span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">(</span><span class="s2">&quot;dataset-example.txt&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">read_text</span><span class="p">()</span>
@@ -11837,14 +11837,14 @@ div#notebook {
 .XXXX.XXXX..XX.XX..XX.XX.XX.
 ............XX.XX..XX.XX.XX.
 .XXXX.XXXX..XX.XX..XX.XX.XX.
-.XXXX.XXX...XX.XX..XX.XX.XX.
+.XXXX.XXX...XX.XX..XX.XX..X.
 ............................
 ............................
-.XX.XX..XX.XX..XX.XX..XX.XX.
-.XX.XX..XX.XX..XX.XX..XX.XX.
-.XX.XX..XX.XX..XX.XX..XX.XX.
-.XX.XX..XX.XX..XX.XX..XX.XX.
-.XX.XX..XX.XX..XX.XX..XX.XX.
+.XX.XX..XX.XX..X..XX......X.
+.XX.XX..XX.XX..X..XX........
+.XX.XX..XX.XX..X..XX..XX....
+.XX.XX..XX.XX..X..XX..XX.XX.
+.XX.XX..XX.XX..X..XX..XX.XX.
 ............................
 
 </pre>
@@ -11859,14 +11859,14 @@ div#notebook {
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Our goal is to predict the orientation of each desk, in order to help with the implementation of sanitary measures like safety distancing.</p>
+<p>Our goal is to predict the orientation of each desk, in order to help with the implementation of sanitary measures like social distancing.</p>
 
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[18]:</div>
+<div class="prompt input_prompt">In&nbsp;[23]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">oriented_floor</span> <span class="o">=</span> <span class="n">predict</span><span class="p">(</span><span class="n">floor</span><span class="p">)</span>
@@ -11892,14 +11892,14 @@ div#notebook {
  ↑↑↑↑ ↑↑↑↑  →← →←  →← →← →← 
             →← →←  →← →← →← 
  ↓↓↓↓ ↓↓↓↓  →← →←  →← →← →← 
- ↑↑↑↑ ↑↑↑   →← →←  →← →← →← 
+ ↑↑↑↑ ↑↑↑   →← →←  →← →←  ← 
                             
                             
- →← →←  →← →←  →← →←  →← →← 
- →← →←  →← →←  →← →←  →← →← 
- →← →←  →← →←  →← →←  →← →← 
- →← →←  →← →←  →← →←  →← →← 
- →← →←  →← →←  →← →←  →← →← 
+ →← →←  →← →←  ?  →←      ? 
+ →← →←  →← →←  ?  →←        
+ →← →←  →← →←  ?  →←  →←    
+ →← →←  →← →←  ?  →←  →← ?? 
+ →← →←  →← →←  ?  →←  →← ?? 
                             
 </pre>
 </div>
@@ -11913,51 +11913,16 @@ div#notebook {
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Certain desk configurations (single desk, line, square) could have multiple possible orientations so we shouldn't predict anything for them:</p>
+<p>Certain desk configurations (single desk, line, square) can have multiple possible orientations so nothing should be predicted there ("?").</p>
 
 </div>
 </div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[49]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">predict</span><span class="p">(</span><span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">(</span><span class="s2">&quot;dataset-example-undecidable.txt&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">read_text</span><span class="p">()))</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area">
-
-<div class="prompt"></div>
-
-
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>           
- ?  ?   ?? 
-    ?   ?? 
-    ?      
-           
-</pre>
-</div>
-</div>
-
-</div>
-</div>
-
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>We want our training set to be as minimal as possible.</p>
+<p>The training set should be as minimal as possible. These are the only user-provided patterns:</p>
 
 </div>
 </div>
@@ -12038,7 +12003,7 @@ div#notebook {
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Don't learn if multiple orientations are found for same neighbors.</p>
+<p>If same features can lead to different orientations, do not learn and mark the pattern as undecidable.</p>
 
 </div>
 </div>
@@ -12265,15 +12230,7 @@ X.X.X.......X...X..X...X
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Approach-2:-connected-neighborhood">Approach 2: connected neighborhood<a class="anchor-link" href="#Approach-2:-connected-neighborhood">&#182;</a></h2>
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>We look at the presence of people in the same "desk island" in a 5x5 neighborhood.</p>
+<p>Correctly predicting common cases, some uncertainty on unusual ones. No false positives (bottom).</p>
 
 </div>
 </div>
@@ -12282,7 +12239,33 @@ X.X.X.......X...X..X...X
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>We find the "island" by computing the connected components of the neighborhood undirected graph.</p>
+<p>Can we do better?</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Approach-2:-connected-neighborhood">Approach 2: connected neighborhood<a class="anchor-link" href="#Approach-2:-connected-neighborhood">&#182;</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Features: presence of desks in the same "desk island" in a 5x5 neighborhood.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>We find the "island" by computing the connected components of the neighborhood's undirected graph.</p>
 
 </div>
 </div>
@@ -12695,7 +12678,7 @@ oJWkwv4Pw87+E2CVzZ0AAAAASUVORK5CYII=
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Able to learn in places where simple model can't, but perhaps surprisingly, is unable to predict in places where simple model could because of deterministic nature. Both approaches complimentary. No false positives.</p>
+<p>Learning in places where simple model can't, but perhaps surprisingly, unable to predict in places where simple model could because of non-exhaustiveness of training set. Both approaches complimentary. No false positives.</p>
 
 </div>
 </div>
@@ -12714,6 +12697,15 @@ oJWkwv4Pw87+E2CVzZ0AAAAASUVORK5CYII=
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h2 id="Approach-3:-classification">Approach 3: classification<a class="anchor-link" href="#Approach-3:-classification">&#182;</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Same features as for approach 2.</p>
+
 </div>
 </div>
 </div>
@@ -12802,7 +12794,7 @@ oJWkwv4Pw87+E2CVzZ0AAAAASUVORK5CYII=
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Generalizes much better, still some uncertainty in some weird areas (probably for a good reason).</p>
+<p>Generalizes much better, still some uncertainty in some weird areas (probably best this way).</p>
 
 </div>
 </div>
@@ -12909,13 +12901,15 @@ oJWkwv4Pw87+E2CVzZ0AAAAASUVORK5CYII=
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[2]:</div>
+<div class="prompt input_prompt">In&nbsp;[24]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">arrows</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;N&quot;</span><span class="p">:</span> <span class="s2">&quot;↑&quot;</span><span class="p">,</span> <span class="s2">&quot;E&quot;</span><span class="p">:</span> <span class="s2">&quot;→&quot;</span><span class="p">,</span> <span class="s2">&quot;S&quot;</span><span class="p">:</span> <span class="s2">&quot;↓&quot;</span><span class="p">,</span> <span class="s2">&quot;W&quot;</span><span class="p">:</span> <span class="s2">&quot;←&quot;</span><span class="p">,</span> <span class="s2">&quot;.&quot;</span><span class="p">:</span> <span class="s2">&quot; &quot;</span><span class="p">}</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">orientation_formats</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;N&quot;</span><span class="p">:</span> <span class="s2">&quot;↑&quot;</span><span class="p">,</span> <span class="s2">&quot;E&quot;</span><span class="p">:</span> <span class="s2">&quot;→&quot;</span><span class="p">,</span> <span class="s2">&quot;S&quot;</span><span class="p">:</span> <span class="s2">&quot;↓&quot;</span><span class="p">,</span> <span class="s2">&quot;W&quot;</span><span class="p">:</span> <span class="s2">&quot;←&quot;</span><span class="p">,</span> <span class="s2">&quot;.&quot;</span><span class="p">:</span> <span class="s2">&quot; &quot;</span><span class="p">}</span>
+<span class="n">rotated_orientations</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;N&quot;</span><span class="p">:</span> <span class="s2">&quot;W&quot;</span><span class="p">,</span> <span class="s2">&quot;E&quot;</span><span class="p">:</span> <span class="s2">&quot;N&quot;</span><span class="p">,</span> <span class="s2">&quot;S&quot;</span><span class="p">:</span> <span class="s2">&quot;E&quot;</span><span class="p">,</span> <span class="s2">&quot;W&quot;</span><span class="p">:</span> <span class="s2">&quot;S&quot;</span><span class="p">}</span>
+<span class="n">flipped_orientations</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;N&quot;</span><span class="p">:</span> <span class="s2">&quot;S&quot;</span><span class="p">,</span> <span class="s2">&quot;E&quot;</span><span class="p">:</span> <span class="s2">&quot;E&quot;</span><span class="p">,</span> <span class="s2">&quot;S&quot;</span><span class="p">:</span> <span class="s2">&quot;N&quot;</span><span class="p">,</span> <span class="s2">&quot;W&quot;</span><span class="p">:</span> <span class="s2">&quot;W&quot;</span><span class="p">}</span>
 
 <span class="k">def</span> <span class="nf">format_desks</span><span class="p">(</span><span class="n">desks</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">):</span>
-    <span class="k">return</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">arrows</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">line</span><span class="p">)</span> <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">desks</span><span class="p">)</span>
+    <span class="k">return</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">orientation_formats</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">line</span><span class="p">)</span> <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">desks</span><span class="p">)</span>
 
 <span class="k">def</span> <span class="nf">parse_floor</span><span class="p">(</span><span class="n">floor</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
     <span class="n">desks</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="nb">list</span><span class="p">(</span><span class="n">line</span><span class="p">)</span> <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">floor</span><span class="o">.</span><span class="n">splitlines</span><span class="p">()])</span>
@@ -12938,15 +12932,11 @@ oJWkwv4Pw87+E2CVzZ0AAAAASUVORK5CYII=
     
     <span class="k">return</span> <span class="p">(</span><span class="n">js</span><span class="p">,</span> <span class="n">iss</span><span class="p">),</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span>
 
-<span class="n">rotations</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;N&quot;</span><span class="p">:</span> <span class="s2">&quot;W&quot;</span><span class="p">,</span> <span class="s2">&quot;E&quot;</span><span class="p">:</span> <span class="s2">&quot;N&quot;</span><span class="p">,</span> <span class="s2">&quot;S&quot;</span><span class="p">:</span> <span class="s2">&quot;E&quot;</span><span class="p">,</span> <span class="s2">&quot;W&quot;</span><span class="p">:</span> <span class="s2">&quot;S&quot;</span><span class="p">}</span>
-<span class="n">horizontal_flips</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;N&quot;</span><span class="p">:</span> <span class="s2">&quot;N&quot;</span><span class="p">,</span> <span class="s2">&quot;E&quot;</span><span class="p">:</span> <span class="s2">&quot;W&quot;</span><span class="p">,</span> <span class="s2">&quot;S&quot;</span><span class="p">:</span> <span class="s2">&quot;S&quot;</span><span class="p">,</span> <span class="s2">&quot;W&quot;</span><span class="p">:</span> <span class="s2">&quot;E&quot;</span><span class="p">}</span>
-<span class="n">vertical_flips</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;N&quot;</span><span class="p">:</span> <span class="s2">&quot;S&quot;</span><span class="p">,</span> <span class="s2">&quot;E&quot;</span><span class="p">:</span> <span class="s2">&quot;E&quot;</span><span class="p">,</span> <span class="s2">&quot;S&quot;</span><span class="p">:</span> <span class="s2">&quot;N&quot;</span><span class="p">,</span> <span class="s2">&quot;W&quot;</span><span class="p">:</span> <span class="s2">&quot;W&quot;</span><span class="p">}</span>
-
 <span class="k">def</span> <span class="nf">rotate_desks</span><span class="p">(</span><span class="n">desks</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">):</span>
-    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="n">rotations</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span> <span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">row</span><span class="p">]</span> <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">rot90</span><span class="p">(</span><span class="n">desks</span><span class="p">)])</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="n">rotated_orientations</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span> <span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">row</span><span class="p">]</span> <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">rot90</span><span class="p">(</span><span class="n">desks</span><span class="p">)])</span>
 
 <span class="k">def</span> <span class="nf">flip_desks</span><span class="p">(</span><span class="n">desks</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">):</span>
-    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="n">vertical_flips</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span> <span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">row</span><span class="p">]</span> <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">flip</span><span class="p">(</span><span class="n">desks</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)])</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="n">flipped_orientations</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span> <span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">row</span><span class="p">]</span> <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">flip</span><span class="p">(</span><span class="n">desks</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)])</span>
 
 <span class="k">def</span> <span class="nf">augment_desks</span><span class="p">(</span><span class="n">desks</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">):</span>
     <span class="n">rotated</span> <span class="o">=</span> <span class="p">[</span>
@@ -13001,10 +12991,7 @@ oJWkwv4Pw87+E2CVzZ0AAAAASUVORK5CYII=
     <span class="k">return</span> <span class="n">desks_pred</span>
 
 <span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="n">floor</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="s2">&quot;clf&quot;</span><span class="p">):</span>
-    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">floor</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
-        <span class="n">desks</span> <span class="o">=</span> <span class="n">parse_floor</span><span class="p">(</span><span class="n">floor</span><span class="p">)</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">desks</span> <span class="o">=</span> <span class="n">floor</span>
+    <span class="n">desks</span> <span class="o">=</span> <span class="n">parse_floor</span><span class="p">(</span><span class="n">floor</span><span class="p">)</span>
     <span class="n">desks_pred</span> <span class="o">=</span> <span class="n">predict_orientation</span><span class="p">(</span><span class="n">desks</span><span class="p">,</span> <span class="n">model</span><span class="p">)[</span><span class="mi">2</span><span class="p">:</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">:</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span>
     <span class="k">return</span> <span class="n">format_desks</span><span class="p">(</span><span class="n">desks_pred</span><span class="p">)</span>
 </pre></div>
