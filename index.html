@@ -11781,7 +11781,7 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[92]:</div>
+<div class="prompt input_prompt">In&nbsp;[1]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">pathlib</span>  <span class="c1"># Python 3.4</span>
@@ -11811,7 +11811,7 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[47]:</div>
+<div class="prompt input_prompt">In&nbsp;[17]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">floor</span> <span class="o">=</span> <span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">(</span><span class="s2">&quot;dataset-example.txt&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">read_text</span><span class="p">()</span>
@@ -11866,7 +11866,7 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[48]:</div>
+<div class="prompt input_prompt">In&nbsp;[18]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">oriented_floor</span> <span class="o">=</span> <span class="n">predict</span><span class="p">(</span><span class="n">floor</span><span class="p">)</span>
@@ -11962,86 +11962,9 @@ div#notebook {
 </div>
 </div>
 </div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Approach-1:-direct-neighbors">Approach 1: direct neighbors<a class="anchor-link" href="#Approach-1:-direct-neighbors">&#182;</a></h2>
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>Features: presence of direct neighbors in each cardinal direction.</p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>Don't learn if multiple orientations are found for same neighbors.</p>
-
-</div>
-</div>
-</div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[86]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">simple_features</span><span class="p">(</span><span class="n">j</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">presence</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">):</span>
-    <span class="n">north</span> <span class="o">=</span> <span class="n">presence</span><span class="p">[</span><span class="n">j</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span>                     
-    <span class="n">north_north</span> <span class="o">=</span> <span class="n">presence</span><span class="p">[</span><span class="n">j</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span>
-    <span class="n">east</span> <span class="o">=</span> <span class="n">presence</span><span class="p">[</span><span class="n">j</span><span class="p">,</span> <span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span>
-    <span class="n">east_east</span> <span class="o">=</span> <span class="n">presence</span><span class="p">[</span><span class="n">j</span><span class="p">,</span> <span class="n">i</span><span class="o">+</span><span class="mi">2</span><span class="p">]</span>
-    <span class="n">south</span> <span class="o">=</span> <span class="n">presence</span><span class="p">[</span><span class="n">j</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span>
-    <span class="n">south_south</span> <span class="o">=</span> <span class="n">presence</span><span class="p">[</span><span class="n">j</span><span class="o">+</span><span class="mi">2</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span>
-    <span class="n">west</span> <span class="o">=</span> <span class="n">presence</span><span class="p">[</span><span class="n">j</span><span class="p">,</span> <span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-    <span class="n">west_west</span> <span class="o">=</span> <span class="n">presence</span><span class="p">[</span><span class="n">j</span><span class="p">,</span> <span class="n">i</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span>
-        
-    <span class="k">return</span> <span class="p">(</span>
-        <span class="n">north</span><span class="p">,</span>
-        <span class="n">north</span> <span class="ow">and</span> <span class="n">north_north</span><span class="p">,</span>
-        <span class="n">east</span><span class="p">,</span>
-        <span class="n">east</span> <span class="ow">and</span> <span class="n">east_east</span><span class="p">,</span>
-        <span class="n">south</span><span class="p">,</span>
-        <span class="n">south</span> <span class="ow">and</span> <span class="n">south_south</span><span class="p">,</span>
-        <span class="n">west</span><span class="p">,</span>
-        <span class="n">west</span> <span class="ow">and</span> <span class="n">west_west</span><span class="p">,</span>
-    <span class="p">)</span>
-
-
-<span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="n">desks</span><span class="p">,</span> <span class="n">get_features</span><span class="p">):</span>
-    <span class="n">model</span> <span class="o">=</span> <span class="p">{}</span>
-    <span class="n">undecidable</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
-
-    <span class="n">augmented_desks</span> <span class="o">=</span> <span class="n">augment_desks</span><span class="p">(</span><span class="n">desks</span><span class="p">)</span>
-    <span class="n">_</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">floor_features</span><span class="p">(</span><span class="n">augmented_desks</span><span class="p">,</span> <span class="n">get_features</span><span class="p">)</span>
-    
-    <span class="k">for</span> <span class="n">x_train</span><span class="p">,</span> <span class="n">y_true</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">model</span><span class="p">[</span><span class="n">x_train</span><span class="p">]</span> <span class="o">!=</span> <span class="n">y_true</span><span class="p">:</span>
-                <span class="n">undecidable</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">x_train</span><span class="p">)</span>
-                <span class="k">del</span> <span class="n">model</span><span class="p">[</span><span class="n">x_train</span><span class="p">]</span>
-        <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">x_train</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">undecidable</span><span class="p">:</span>
-                <span class="n">model</span><span class="p">[</span><span class="n">x_train</span><span class="p">]</span> <span class="o">=</span> <span class="n">y_true</span>
-
-    <span class="k">return</span> <span class="n">model</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[87]:</div>
+<div class="prompt input_prompt">In&nbsp;[19]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">desks_train</span> <span class="o">=</span> <span class="n">parse_floor</span><span class="p">(</span><span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">(</span><span class="s2">&quot;dataset-train.txt&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">read_text</span><span class="p">())</span>
@@ -12094,9 +12017,86 @@ div#notebook {
 </div>
 
 </div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Approach-1:-direct-neighbors">Approach 1: direct neighbors<a class="anchor-link" href="#Approach-1:-direct-neighbors">&#182;</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Features: presence of direct neighbors in each cardinal direction.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Don't learn if multiple orientations are found for same neighbors.</p>
+
+</div>
+</div>
+</div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[88]:</div>
+<div class="prompt input_prompt">In&nbsp;[3]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">simple_features</span><span class="p">(</span><span class="n">j</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">presence</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">):</span>
+    <span class="n">north</span> <span class="o">=</span> <span class="n">presence</span><span class="p">[</span><span class="n">j</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span>                     
+    <span class="n">north_north</span> <span class="o">=</span> <span class="n">presence</span><span class="p">[</span><span class="n">j</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span>
+    <span class="n">east</span> <span class="o">=</span> <span class="n">presence</span><span class="p">[</span><span class="n">j</span><span class="p">,</span> <span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">east_east</span> <span class="o">=</span> <span class="n">presence</span><span class="p">[</span><span class="n">j</span><span class="p">,</span> <span class="n">i</span><span class="o">+</span><span class="mi">2</span><span class="p">]</span>
+    <span class="n">south</span> <span class="o">=</span> <span class="n">presence</span><span class="p">[</span><span class="n">j</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span>
+    <span class="n">south_south</span> <span class="o">=</span> <span class="n">presence</span><span class="p">[</span><span class="n">j</span><span class="o">+</span><span class="mi">2</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span>
+    <span class="n">west</span> <span class="o">=</span> <span class="n">presence</span><span class="p">[</span><span class="n">j</span><span class="p">,</span> <span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">west_west</span> <span class="o">=</span> <span class="n">presence</span><span class="p">[</span><span class="n">j</span><span class="p">,</span> <span class="n">i</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span>
+        
+    <span class="k">return</span> <span class="p">(</span>
+        <span class="n">north</span><span class="p">,</span>
+        <span class="n">north</span> <span class="ow">and</span> <span class="n">north_north</span><span class="p">,</span>
+        <span class="n">east</span><span class="p">,</span>
+        <span class="n">east</span> <span class="ow">and</span> <span class="n">east_east</span><span class="p">,</span>
+        <span class="n">south</span><span class="p">,</span>
+        <span class="n">south</span> <span class="ow">and</span> <span class="n">south_south</span><span class="p">,</span>
+        <span class="n">west</span><span class="p">,</span>
+        <span class="n">west</span> <span class="ow">and</span> <span class="n">west_west</span><span class="p">,</span>
+    <span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="n">desks</span><span class="p">,</span> <span class="n">get_features</span><span class="p">):</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">undecidable</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+
+    <span class="n">augmented_desks</span> <span class="o">=</span> <span class="n">augment_desks</span><span class="p">(</span><span class="n">desks</span><span class="p">)</span>
+    <span class="n">_</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">floor_features</span><span class="p">(</span><span class="n">augmented_desks</span><span class="p">,</span> <span class="n">get_features</span><span class="p">)</span>
+    
+    <span class="k">for</span> <span class="n">x_train</span><span class="p">,</span> <span class="n">y_true</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">model</span><span class="p">[</span><span class="n">x_train</span><span class="p">]</span> <span class="o">!=</span> <span class="n">y_true</span><span class="p">:</span>
+                <span class="n">undecidable</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">x_train</span><span class="p">)</span>
+                <span class="k">del</span> <span class="n">model</span><span class="p">[</span><span class="n">x_train</span><span class="p">]</span>
+        <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">x_train</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">undecidable</span><span class="p">:</span>
+                <span class="n">model</span><span class="p">[</span><span class="n">x_train</span><span class="p">]</span> <span class="o">=</span> <span class="n">y_true</span>
+
+    <span class="k">return</span> <span class="n">model</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[5]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">simple_model</span> <span class="o">=</span> <span class="n">fit</span><span class="p">(</span><span class="n">desks_train</span><span class="p">,</span> <span class="n">simple_features</span><span class="p">)</span>
@@ -12113,7 +12113,7 @@ div#notebook {
 
 <div class="output_area">
 
-<div class="prompt output_prompt">Out[88]:</div>
+<div class="prompt output_prompt">Out[5]:</div>
 
 
 
@@ -12132,14 +12132,14 @@ div#notebook {
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Max theoretical size is 2**8</p>
+<p>Max model size is 2**8</p>
 
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[89]:</div>
+<div class="prompt input_prompt">In&nbsp;[6]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">floor_test</span> <span class="o">=</span> <span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">(</span><span class="s2">&quot;dataset-test.txt&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">read_text</span><span class="p">()</span>
@@ -12202,7 +12202,7 @@ X.X.X.......X...X..X...X
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[90]:</div>
+<div class="prompt input_prompt">In&nbsp;[7]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">predict</span><span class="p">(</span><span class="n">floor_test</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="s2">&quot;simple&quot;</span><span class="p">))</span>
@@ -12298,7 +12298,7 @@ X.X.X.......X...X..X...X
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[62]:</div>
+<div class="prompt input_prompt">In&nbsp;[8]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">neighbors_along_direction</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">direction</span><span class="p">,</span> <span class="n">axis</span><span class="p">):</span>
@@ -12331,7 +12331,7 @@ X.X.X.......X...X..X...X
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[63]:</div>
+<div class="prompt input_prompt">In&nbsp;[9]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">example_neighborhood</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span>
@@ -12354,13 +12354,13 @@ X.X.X.......X...X..X...X
 
 <div class="output_area">
 
-<div class="prompt output_prompt">Out[63]:</div>
+<div class="prompt output_prompt">Out[9]:</div>
 
 
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>&lt;matplotlib.axes._subplots.AxesSubplot at 0x127516320&gt;</pre>
+<pre>&lt;matplotlib.axes._subplots.AxesSubplot at 0x11de5b780&gt;</pre>
 </div>
 
 </div>
@@ -12456,7 +12456,7 @@ AAAAAElFTkSuQmCC
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[64]:</div>
+<div class="prompt input_prompt">In&nbsp;[10]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">sns</span><span class="o">.</span><span class="n">heatmap</span><span class="p">(</span><span class="n">only_connected</span><span class="p">(</span><span class="n">example_neighborhood</span><span class="p">))</span>
@@ -12472,13 +12472,13 @@ AAAAAElFTkSuQmCC
 
 <div class="output_area">
 
-<div class="prompt output_prompt">Out[64]:</div>
+<div class="prompt output_prompt">Out[10]:</div>
 
 
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>&lt;matplotlib.axes._subplots.AxesSubplot at 0x1275125c0&gt;</pre>
+<pre>&lt;matplotlib.axes._subplots.AxesSubplot at 0x11deaeba8&gt;</pre>
 </div>
 
 </div>
@@ -12573,7 +12573,7 @@ oJWkwv4Pw87+E2CVzZ0AAAAASUVORK5CYII=
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[65]:</div>
+<div class="prompt input_prompt">In&nbsp;[11]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">advanced_features</span><span class="p">(</span><span class="n">j</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">presence</span><span class="p">):</span>
@@ -12589,7 +12589,7 @@ oJWkwv4Pw87+E2CVzZ0AAAAASUVORK5CYII=
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[66]:</div>
+<div class="prompt input_prompt">In&nbsp;[12]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">advanced_model</span> <span class="o">=</span> <span class="n">fit</span><span class="p">(</span><span class="n">desks_train</span><span class="p">,</span> <span class="n">advanced_features</span><span class="p">)</span>
@@ -12606,7 +12606,7 @@ oJWkwv4Pw87+E2CVzZ0AAAAASUVORK5CYII=
 
 <div class="output_area">
 
-<div class="prompt output_prompt">Out[66]:</div>
+<div class="prompt output_prompt">Out[12]:</div>
 
 
 
@@ -12632,7 +12632,7 @@ oJWkwv4Pw87+E2CVzZ0AAAAASUVORK5CYII=
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[67]:</div>
+<div class="prompt input_prompt">In&nbsp;[13]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">predict</span><span class="p">(</span><span class="n">floor_test</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="s2">&quot;advanced&quot;</span><span class="p">))</span>
@@ -12719,7 +12719,7 @@ oJWkwv4Pw87+E2CVzZ0AAAAASUVORK5CYII=
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[68]:</div>
+<div class="prompt input_prompt">In&nbsp;[14]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">fit_clf</span><span class="p">(</span><span class="n">desks</span><span class="p">):</span>
@@ -12739,7 +12739,7 @@ oJWkwv4Pw87+E2CVzZ0AAAAASUVORK5CYII=
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[69]:</div>
+<div class="prompt input_prompt">In&nbsp;[15]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">predict</span><span class="p">(</span><span class="n">floor_test</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="s2">&quot;clf&quot;</span><span class="p">))</span>
@@ -12775,13 +12775,13 @@ oJWkwv4Pw87+E2CVzZ0AAAAASUVORK5CYII=
 ↑↑↑ ↑↑↑↑↑ ↑↑↑↑↑↑↑ ↑↑↑↑↑↑
                         
 ↓   ↓    ↓     ↓        
-?↑↑ ???? ????? ??????   
+↑↑↑ ↑↑?? ↑↑??? ↑↑????   
                         
  ↓   ↓    ↓     ↓       
 ↑↑↑ ↑↑↑↑ ↑↑↑?? ↑↑↑???   
                         
  ↓    ↓      ↓     ↓   ↓
-↑↑↑ ↑↑↑↑↑ ??↑↑↑?? ↑↑↑↑?↑
+↑↑↑ ↑↑↑↑↑ ??↑↑↑?? ↑↑↑?↑↑
                         
                         
                         
@@ -12909,7 +12909,7 @@ oJWkwv4Pw87+E2CVzZ0AAAAASUVORK5CYII=
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[45]:</div>
+<div class="prompt input_prompt">In&nbsp;[2]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">arrows</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;N&quot;</span><span class="p">:</span> <span class="s2">&quot;↑&quot;</span><span class="p">,</span> <span class="s2">&quot;E&quot;</span><span class="p">:</span> <span class="s2">&quot;→&quot;</span><span class="p">,</span> <span class="s2">&quot;S&quot;</span><span class="p">:</span> <span class="s2">&quot;↓&quot;</span><span class="p">,</span> <span class="s2">&quot;W&quot;</span><span class="p">:</span> <span class="s2">&quot;←&quot;</span><span class="p">,</span> <span class="s2">&quot;.&quot;</span><span class="p">:</span> <span class="s2">&quot; &quot;</span><span class="p">}</span>
@@ -12976,19 +12976,8 @@ oJWkwv4Pw87+E2CVzZ0AAAAASUVORK5CYII=
     <span class="n">horizontals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">pad</span><span class="p">(</span><span class="n">horizontals</span><span class="p">,</span> <span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">width1</span> <span class="o">-</span> <span class="n">width2</span><span class="p">)),</span> <span class="n">constant_values</span><span class="o">=</span><span class="s2">&quot;.&quot;</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">verticals</span><span class="p">,</span> <span class="n">horizontals</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-</pre></div>
 
-</div>
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[23]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">predict_orientation</span><span class="p">(</span><span class="n">desks</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">,</span> <span class="n">model_name</span><span class="o">=</span><span class="s2">&quot;clf&quot;</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">predict_orientation</span><span class="p">(</span><span class="n">desks</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">,</span> <span class="n">model_name</span><span class="o">=</span><span class="s2">&quot;clf&quot;</span><span class="p">):</span>
     <span class="n">desks_pred</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">desks</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">model_name</span> <span class="o">==</span> <span class="s2">&quot;clf&quot;</span><span class="p">:</span>
         <span class="n">coords</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">floor_features</span><span class="p">(</span><span class="n">desks</span><span class="p">,</span> <span class="n">advanced_features</span><span class="p">)</span>
